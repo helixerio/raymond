@@ -1,13 +1,18 @@
 # raymond [![GoDoc](https://godoc.org/github.com/helixerio/raymond/v2?status.svg)](http://godoc.org/github.com/helixerio/raymond/v2)
 
+## Notice
+
 This repository is forked from <https://github.com/aymerick/raymond> and is updated to
 be compatible with Go modules (as the original repository is not maintained anymore).
+In addition it includes a few minor fixes, mainly related to the `handlebars` struct tags.
 
-Handlebars for [golang](https://golang.org) with the same features as [handlebars.js](http://handlebarsjs.com) `3.0`.
+## Description
+
+Handlebars for [Go](https://golang.org) with the same features as [handlebars.js](http://handlebarsjs.com) `3.0`.
 
 The full API documentation is available here: <http://godoc.org/github.com/helixerio/raymond/v2>.
 
-![Raymond Logo](https://github.com/helixerio/raymond/blob/master/raymond.png?raw=true "Raymond")
+![Raymond Logo](https://github.com/helixerio/raymond/blob/main/raymond.png?raw=true "Raymond")
 
 # Table of Contents
 
