@@ -1,7 +1,7 @@
 package raymond
 
 import (
-	"io/ioutil"
+	"os"
 	"path"
 	"regexp"
 	"strings"
@@ -30,13 +30,9 @@ type mustacheTestFile struct {
 	Tests    []mustacheTest
 }
 
-var (
-	rAltDelim = regexp.MustCompile(regexp.QuoteMeta("{{="))
-)
+var rAltDelim = regexp.MustCompile(regexp.QuoteMeta("{{="))
 
-var (
-	musTestLambdaInterMult = 0
-)
+var musTestLambdaInterMult = 0
 
 func TestMustache(t *testing.T) {
 	skipFiles := map[string]bool{
@@ -57,7 +53,7 @@ func TestMustache(t *testing.T) {
 func testsFromMustacheFile(fileName string) []Test {
 	result := []Test{}
 
-	fileData, err := ioutil.ReadFile(path.Join("mustache", "specs", fileName))
+	fileData, err := os.ReadFile(path.Join("mustache", "specs", fileName))
 	if err != nil {
 		panic(err)
 	}
@@ -115,7 +111,7 @@ func haveAltDelimiter(test mustacheTest) bool {
 func mustacheTestFiles() []string {
 	var result []string
 
-	files, err := ioutil.ReadDir(path.Join("mustache", "specs"))
+	files, err := os.ReadDir(path.Join("mustache", "specs"))
 	if err != nil {
 		panic(err)
 	}

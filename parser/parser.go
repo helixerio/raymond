@@ -7,8 +7,8 @@ import (
 	"runtime"
 	"strconv"
 
-	"github.com/aymerick/raymond/ast"
-	"github.com/aymerick/raymond/lexer"
+	"github.com/helixerio/raymond/v2/ast"
+	"github.com/helixerio/raymond/v2/lexer"
 )
 
 // References:
@@ -304,7 +304,8 @@ func (p *parser) parseBlock() *ast.BlockStatement {
 // TODO: This was totally cargo culted ! CHECK THAT !
 //
 // cf. prepareBlock() in:
-//   https://github.com/wycats/handlebars.js/blob/master/lib/handlebars/compiler/helper.js
+//
+//	https://github.com/wycats/handlebars.js/blob/master/lib/handlebars/compiler/helper.js
 func setBlockInverseStrip(block *ast.BlockStatement) {
 	if block.Inverse == nil {
 		return
@@ -361,7 +362,8 @@ func (p *parser) parseOpenBlockExpression(tok *lexer.Token) (*ast.BlockStatement
 }
 
 // inverseChain : openInverseChain program inverseChain?
-//              | inverseAndProgram
+//
+//	| inverseAndProgram
 func (p *parser) parseInverseChain() *ast.Program {
 	if p.isInverse() {
 		// inverseAndProgram
@@ -462,7 +464,8 @@ func (p *parser) parseCloseBlock(block *ast.BlockStatement) {
 }
 
 // mustache : OPEN helperName param* hash? CLOSE
-//          | OPEN_UNESCAPED helperName param* hash? CLOSE_UNESCAPED
+//
+//	| OPEN_UNESCAPED helperName param* hash? CLOSE_UNESCAPED
 func (p *parser) parseMustache() *ast.MustacheStatement {
 	// OPEN | OPEN_UNESCAPED
 	tok := p.shift()
@@ -472,11 +475,7 @@ func (p *parser) parseMustache() *ast.MustacheStatement {
 		closeToken = lexer.TokenCloseUnescaped
 	}
 
-	unescaped := false
-	if (tok.Kind == lexer.TokenOpenUnescaped) || (rOpenAmp.MatchString(tok.Val)) {
-		unescaped = true
-	}
-
+	unescaped := (tok.Kind == lexer.TokenOpenUnescaped) || (rOpenAmp.MatchString(tok.Val))
 	result := ast.NewMustacheStatement(tok.Pos, tok.Line, unescaped)
 
 	// helperName param* hash?
@@ -612,7 +611,7 @@ func (p *parser) parseBlockParams() []string {
 	var result []string
 
 	// OPEN_BLOCK_PARAMS
-	tok := p.shift()
+	_ = p.shift()
 
 	// ID+
 	for p.isID() {
@@ -624,7 +623,7 @@ func (p *parser) parseBlockParams() []string {
 	}
 
 	// CLOSE_BLOCK_PARAMS
-	tok = p.shift()
+	tok := p.shift()
 	if tok.Kind != lexer.TokenCloseBlockParams {
 		errExpected(lexer.TokenCloseBlockParams, tok)
 	}
@@ -713,7 +712,8 @@ func (p *parser) parseDataName() *ast.PathExpression {
 
 // path : pathSegments
 // pathSegments : pathSegments SEP ID
-//              | ID
+//
+//	| ID
 func (p *parser) parsePath(data bool) *ast.PathExpression {
 	var tok *lexer.Token
 
