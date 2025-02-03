@@ -401,6 +401,17 @@ func (v *evalVisitor) evalStructTag(ctx reflect.Value, name string) reflect.Valu
 
 	for i := 0; i < val.NumField(); i++ {
 		field := val.Type().Field(i)
+
+		if field.Anonymous {
+			val, _ := indirect(val.Field(i))
+			if !val.IsValid() {
+				return zero
+			}
+			if result := v.evalStructTag(val, name); result.IsValid() {
+				return result
+			}
+		}
+
 		tag := field.Tag.Get("handlebars")
 		if tag == name {
 			return val.Field(i)
