@@ -225,6 +225,63 @@ func TestEvalStructTag(t *testing.T) {
 	}
 }
 
+func TestEvalStructTagEmbedded(t *testing.T) {
+	t.Parallel()
+
+	source := `<div class="person">
+	<h1>{{real-name}}</h1>
+	<ul>
+	  <li>City: {{location}}</li>
+	  <li>Rug: {{[r.u.g]}}</li>
+	  <li>Activity: {{activity}}</li>
+	</ul>
+	{{#each other-names}}
+	<p>{{alias-name}}</p>
+	{{/each}}
+</div>`
+
+	expected := `<div class="person">
+	<h1>Lebowski</h1>
+	<ul>
+	  <li>City: Venice</li>
+	  <li>Rug: Tied The Room Together</li>
+	  <li>Activity: Bowling</li>
+	</ul>
+	<p>his dudeness</p>
+	<p>el duderino</p>
+</div>`
+
+	type Alias struct {
+		Name string `handlebars:"alias-name"`
+	}
+
+	type CharacterInfo struct {
+		City     string `handlebars:"location"`
+		Rug      string `handlebars:"r.u.g"`
+		Activity string `handlebars:"not-activity"`
+	}
+
+	type Character struct {
+		*CharacterInfo
+		RealName string  `handlebars:"real-name"`
+		Aliases  []Alias `handlebars:"other-names"`
+	}
+
+	ctx := Character{
+		&CharacterInfo{"Venice", "Tied The Room Together", "Bowling"},
+		"Lebowski",
+		[]Alias{
+			{"his dudeness"},
+			{"el duderino"},
+		},
+	}
+
+	output := MustRender(source, ctx)
+	if output != expected {
+		t.Errorf("Failed to evaluate with embedded struct tag context")
+	}
+}
+
 type TestFoo struct{}
 
 func (t *TestFoo) Subject() string {
